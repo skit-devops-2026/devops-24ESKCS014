@@ -1,0 +1,18 @@
+{
+  "name": "job-portal-devops",
+  "version": "1.0.0",
+  "description": "DevOps Job Portal Application with Automated Testing & CI/CD Pipeline Integration",
+  "main": "script.js",
+  "scripts": {
+    "test": "node --test tests/app.test.js"
+  },
+  "keywords": [
+    "devops",
+    "job-portal",
+    "ci-cd",
+    "github-actions",
+    "jenkins"
+  ],
+  "author": "Abhinav Sharma",
+  "license": "ISC"
+}
