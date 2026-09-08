@@ -115,13 +115,13 @@ Used for the structure and semantic markup of the website.
 
 Important HTML elements include:
 
-- <header>
-- <nav>
-- <section>
-- <main>
-- <aside>
-- <footer>
-- <form>
+- `<header>`
+- `<nav>`
+- `<section>`
+- `<main>`
+- `<aside>`
+- `<footer>`
+- `<form>`
 
 ### CSS3
 
@@ -156,6 +156,7 @@ Major functionality includes:
 
 ## 📁 Project Structure
 
+```text
 job portal/
 │
 ├── images/
