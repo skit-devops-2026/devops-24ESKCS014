@@ -123,3 +123,8 @@ The repository strictly follows feature-branch workflow practices:
 - `docs/devops-setup`: Feature branch for documentation updates.
 
 All feature branches are merged into `main` via documented Pull Requests.
+
+
+## 📊 Quality Assurance & Automated Status Checks
+
+All pull requests and commits are automatically validated through GitHub Actions CI pipeline running unit test suites across Node.js environments.
