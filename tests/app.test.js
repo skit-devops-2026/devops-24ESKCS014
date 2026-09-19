@@ -81,3 +81,4 @@ test('Project Structure Verification - index.html Exists & Valid', () => {
   assert.match(content, /<!DOCTYPE html>/i, 'index.html should have valid DOCTYPE tag');
   assert.match(content, /<html/i, 'index.html should have html tag');
 });
+
