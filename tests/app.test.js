@@ -82,3 +82,15 @@ test('Project Structure Verification - index.html Exists & Valid', () => {
   assert.match(content, /<html/i, 'index.html should have html tag');
 });
 
+
+test('Search Filter Logic - Search by Company Name', () => {
+  const result = filterJobs(sampleJobs, 'SecureNet', null, null);
+  assert.equal(result.length, 1);
+  assert.equal(result[0].title, 'Cyber Security Analyst');
+});
+
+test('Search Filter Logic - Search by Company Name', () => {
+  const result = filterJobs(sampleJobs, 'SecureNet', null, null);
+  assert.equal(result.length, 1);
+  assert.equal(result[0].title, 'Cyber Security Analyst');
+});
