@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: job-portal-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    networks:
+      - job-portal-network
+    depends_on:
+      - mongodb
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: job-portal-frontend
+    ports:
+      - "8080:80"
+    networks:
+      - job-portal-network
+    depends_on:
+      - backend
+    restart: always
+
+  mongodb:
+    image: mongo:latest
+    container_name: job-portal-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=jobportal
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - job-portal-network
+    restart: always
+
+networks:
+  job-portal-network:
+    name: job-portal-network
+    driver: bridge
+
+volumes:
+  mongo-data:
+    name: mongo-data

@@ -81,3 +81,26 @@ test('Project Structure Verification - index.html Exists & Valid', () => {
   assert.match(content, /<!DOCTYPE html>/i, 'index.html should have valid DOCTYPE tag');
   assert.match(content, /<html/i, 'index.html should have html tag');
 });
+
+// Helper function: Job Title Validation Logic
+function isValidJobTitle(title) {
+  return typeof title === 'string' && title.trim().length > 0;
+}
+
+test('Job Title Validation - Valid Job Title Returns True', () => {
+  assert.equal(isValidJobTitle('Frontend Developer'), true);
+  assert.equal(isValidJobTitle('DevOps Engineer'), true);
+});
+
+test('Job Title Validation - Empty String & Whitespace Return False', () => {
+  assert.equal(isValidJobTitle(''), false);
+  assert.equal(isValidJobTitle('   '), false);
+});
+
+test('Job Title Validation - Invalid Types Return False', () => {
+  assert.equal(isValidJobTitle(123), false);
+  assert.equal(isValidJobTitle(null), false);
+  assert.equal(isValidJobTitle(undefined), false);
+  assert.equal(isValidJobTitle({}), false);
+});
+

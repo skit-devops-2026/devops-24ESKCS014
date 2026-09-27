@@ -1,0 +1,53 @@
+name: Job Portal Docker CI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-test:
+    name: Build Docker Images & Run Containerized Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Build Backend Docker Image
+        run: docker build -t job-portal-backend ./backend
+
+      - name: Build Frontend Docker Image
+        run: docker build -t job-portal-frontend .
+
+      - name: Run Tests Inside Backend Docker Image
+        run: docker run --rm job-portal-backend npm test
+
+      - name: Tag Local Images with Commit SHA
+        run: |
+          docker tag job-portal-backend job-portal-backend:${{ github.sha }}
+          docker tag job-portal-frontend job-portal-frontend:${{ github.sha }}
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Tag Images for GHCR
+        run: |
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker tag job-portal-backend ghcr.io/${REPO_OWNER}/job-portal-backend:${{ github.sha }}
+          docker tag job-portal-backend ghcr.io/${REPO_OWNER}/job-portal-backend:latest
+          docker tag job-portal-frontend ghcr.io/${REPO_OWNER}/job-portal-frontend:${{ github.sha }}
+          docker tag job-portal-frontend ghcr.io/${REPO_OWNER}/job-portal-frontend:latest
+
+      - name: Push Images to GHCR
+        run: |
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          docker push ghcr.io/${REPO_OWNER}/job-portal-backend:${{ github.sha }}
+          docker push ghcr.io/${REPO_OWNER}/job-portal-backend:latest
+          docker push ghcr.io/${REPO_OWNER}/job-portal-frontend:${{ github.sha }}
+          docker push ghcr.io/${REPO_OWNER}/job-portal-frontend:latest
