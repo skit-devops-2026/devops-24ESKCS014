@@ -2,7 +2,9 @@ name: Job Portal Docker CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
 
 permissions:
@@ -10,12 +12,12 @@ permissions:
   packages: write
 
 jobs:
-  build-and-test:
-    name: Build Docker Images & Run Containerized Tests
+  build-test-and-push:
+    name: Build Docker Images, Run Tests & Push to GHCR
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the code
+      - name: Check out repository code
         uses: actions/checkout@v4
 
       - name: Build Backend Docker Image
@@ -24,30 +26,38 @@ jobs:
       - name: Build Frontend Docker Image
         run: docker build -t job-portal-frontend .
 
-      - name: Run Tests Inside Backend Docker Image
+      - name: Run Tests Inside Backend Docker Container
         run: docker run --rm job-portal-backend npm test
 
-      - name: Tag Local Images with Commit SHA
-        run: |
-          docker tag job-portal-backend job-portal-backend:${{ github.sha }}
-          docker tag job-portal-frontend job-portal-frontend:${{ github.sha }}
-
       - name: Log in to GitHub Container Registry (GHCR)
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Tag Images for GHCR
+      - name: Tag and Push Images to Container Registry
+        if: github.event_name != 'pull_request'
         run: |
           REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          
+          # Tag and push main repo container image
+          docker tag job-portal-backend ghcr.io/${REPO_NAME}:${{ github.sha }}
+          docker tag job-portal-backend ghcr.io/${REPO_NAME}:latest
+          docker push ghcr.io/${REPO_NAME}:${{ github.sha }}
+          docker push ghcr.io/${REPO_NAME}:latest
+
+          # Tag and push backend component image
           docker tag job-portal-backend ghcr.io/${REPO_OWNER}/job-portal-backend:${{ github.sha }}
           docker tag job-portal-backend ghcr.io/${REPO_OWNER}/job-portal-backend:latest
-          docker tag job-portal-frontend ghcr.io/${REPO_OWNER}/job-portal-frontend:${{ github.sha }}
-          docker tag job-portal-frontend ghcr.io/${REPO_OWNER}/job-portal-frontend:latest
-
-      - name: Push Images to GHCR
-        run: |
-          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           docker push ghcr.io/${REPO_OWNER}/job-portal-backend:${{ github.sha }}
           docker push ghcr.io/${REPO_OWNER}/job-portal-backend:latest
+
+          # Tag and push frontend component image
+          docker tag job-portal-frontend ghcr.io/${REPO_OWNER}/job-portal-frontend:${{ github.sha }}
+          docker tag job-portal-frontend ghcr.io/${REPO_OWNER}/job-portal-frontend:latest
           docker push ghcr.io/${REPO_OWNER}/job-portal-frontend:${{ github.sha }}
           docker push ghcr.io/${REPO_OWNER}/job-portal-frontend:latest
+

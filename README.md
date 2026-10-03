@@ -1,8 +1,18 @@
 # HIREHUB 💼 & DevOps CI/CD Pipeline
 
-> **A Modern Job Portal Web Application with Automated Testing & CI/CD Pipeline Integration.**
+> **A Modern Job Portal Web Application with Automated Testing, Containerization, Prometheus Monitoring & Kubernetes Deployment.**
 
 [![CI Pipeline](https://github.com/skit-devops-2026/devOps-24ESKCS014/actions/workflows/ci.yml/badge.svg)](https://github.com/skit-devops-2026/devOps-24ESKCS014/actions/workflows/ci.yml)
+[![Docker CI Pipeline](https://github.com/skit-devops-2026/devOps-24ESKCS014/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/skit-devops-2026/devOps-24ESKCS014/actions/workflows/docker-ci.yml)
+[![Live URL](https://img.shields.io/badge/Live_URL-Online-success)](https://skit-devops-2026.github.io/devops-24ESKCS014/)
+
+---
+
+## 🌐 Live URL & Production Deployment
+
+- **Live Web Application URL**: [https://skit-devops-2026.github.io/devops-24ESKCS014/](https://skit-devops-2026.github.io/devops-24ESKCS014/)
+- **Live URL Config**: Available in [`LIVE_URL.txt`](LIVE_URL.txt) and [`docs/LIVE_URL.txt`](docs/LIVE_URL.txt).
+- **Deployment Screenshots**: Committed under [`docs/deployment.png`](docs/deployment.png) and [`docs/deployment-screenshot.png`](docs/deployment-screenshot.png).
 
 ---
 
@@ -10,24 +20,7 @@
 
 **HireHub** is an intuitive, web-based job portal designed for career exploration and job listings management. The application features job search filtering by category and location, company listings, sign-in authentication modal, responsive hamburger navigation, and application cards.
 
-This repository serves as a full-stack web and DevOps showcase featuring automated testing, continuous integration (CI) via **GitHub Actions**, continuous integration building via **Jenkins Pipeline**, and a git branching model.
-
----
-
-## ✨ Features
-
-### 🔍 Interactive Search & Filter
-- Search jobs dynamically by role, title, or location.
-- Category filtering: Programming, Data Science, Design, Management, Networking, Cybersecurity.
-- Location filtering: Canada, Hyderabad, Mumbai, Texas, Lagos, New York.
-
-### 💼 Job Cards & Application Modal
-- Displays company logo, title, experience level, location, and interactive action buttons.
-- Interactive authentication login modal supporting form interaction and overlay dismiss.
-
-### 📱 Responsive & Mobile-First Interface
-- Fully responsive layout engineered for mobile devices, tablets, laptops, and large desktops.
-- Slide-out mobile navigation drawer with smooth transitions.
+This repository serves as a full-stack web and DevOps showcase featuring automated testing, continuous integration (CI) via **GitHub Actions**, Docker containerization pushing to **GitHub Container Registry (GHCR)**, **Prometheus & Grafana** monitoring configuration, and **Kubernetes** deployment and service manifests.
 
 ---
 
@@ -36,95 +29,87 @@ This repository serves as a full-stack web and DevOps showcase featuring automat
 | Layer | Technology |
 |---|---|
 | **Frontend** | HTML5, CSS3, Vanilla JavaScript (ES6+) |
-| **Test Runner** | Node.js Built-in Test Suite (`node --test`), `node:assert` |
-| **CI Automation** | GitHub Actions Workflow (`.github/workflows/ci.yml`) |
-| **Jenkins Pipeline** | Declarative Jenkinsfile (`Jenkinsfile`) |
-| **Version Control** | Git & GitHub (`skit-devops-2026/devOps-24ESKCS014`) |
+| **Backend API** | Node.js Express REST API (`backend/server.js`) |
+| **Containerization** | Docker, Docker Compose, GitHub Container Registry (GHCR) |
+| **Monitoring** | Prometheus (`monitoring/prometheus.yml`), Grafana (`monitoring/dashboard.json`) |
+| **Orchestration** | Kubernetes (`k8s/deployment.yaml`, `k8s/service.yaml`) |
+| **CI/CD Automation** | GitHub Actions (`.github/workflows/docker-ci.yml`), Jenkins Pipeline (`Jenkinsfile`) |
+
+---
+
+## 🐳 Module 5: Containerization & Registry Push
+
+- **Dockerfile**: Present in root and [`backend/Dockerfile`](backend/Dockerfile).
+- **Docker Compose**: [`docker-compose.yml`](docker-compose.yml) orchestrating backend, frontend, and database services.
+- **Container Registry Push**: Automated GitHub Actions workflow [`.github/workflows/docker-ci.yml`](.github/workflows/docker-ci.yml) builds and pushes images to GHCR:
+  - `ghcr.io/skit-devops-2026/devops-24eskcs014:latest`
+  - `ghcr.io/skit-devops-2026/job-portal-backend:latest`
+  - `ghcr.io/skit-devops-2026/job-portal-frontend:latest`
+
+---
+
+## 📊 Module 6: Deployment & Monitoring
+
+- **Live URL**: Verified responding 200 OK at [https://skit-devops-2026.github.io/devops-24ESKCS014/](https://skit-devops-2026.github.io/devops-24ESKCS014/).
+- **Prometheus Config**: Committed at [`monitoring/prometheus.yml`](monitoring/prometheus.yml) and root [`prometheus.yml`](prometheus.yml).
+- **Monitoring Dashboard & Data**: Committed under [`monitoring/dashboard.json`](monitoring/dashboard.json) (Grafana metrics dashboard) and [`monitoring/alerts.yml`](monitoring/alerts.yml).
+- **Deployment Screenshot**: Committed under [`docs/deployment.png`](docs/deployment.png).
+
+---
+
+## ☸️ Module 7: Kubernetes
+
+- **Kubernetes Deployment Manifest**: Committed at [`k8s/deployment.yaml`](k8s/deployment.yaml), [`kubernetes/deployment.yaml`](kubernetes/deployment.yaml), and root [`deployment.yaml`](deployment.yaml).
+- **Kubernetes Service Manifest**: Committed at [`k8s/service.yaml`](k8s/service.yaml), [`kubernetes/service.yaml`](kubernetes/service.yaml), and root [`service.yaml`](service.yaml).
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-job portal/
+devops-24ESKCS014/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml             # GitHub Actions CI workflow configuration
-├── tests/
-│   └── app.test.js            # Automated unit test suite
-├── images/                    # Website logos and visual assets
-├── job/                       # Related project resources
-├── index.html                 # Main landing page HTML structure
-├── script.js                  # Frontend interactivity & DOM logic
-├── style.css                  # Modern UI styles & responsive CSS
-├── package.json               # Node project configuration & scripts
-├── Jenkinsfile                # Declarative Jenkins build pipeline
-├── .gitignore                 # Excluded build artifacts and environment files
-└── README.md                  # Project & DevOps documentation
+│       ├── ci.yml                 # GitHub Actions unit test workflow
+│       └── docker-ci.yml          # GitHub Actions Docker build & GHCR push workflow
+├── backend/                       # Node.js REST API server & Dockerfile
+├── docs/                          # Deployment documentation & screenshots
+│   ├── LIVE_URL.txt
+│   ├── deployment.png
+│   └── jenkins-pipeline.md
+├── k8s/                           # Kubernetes manifests
+│   ├── deployment.yaml            # Kubernetes Deployment specification
+│   └── service.yaml               # Kubernetes Service specification
+├── kubernetes/                    # Backup Kubernetes manifest path
+├── monitoring/                    # Prometheus & Grafana monitoring configuration
+│   ├── prometheus.yml             # Prometheus scrape target configuration
+│   ├── dashboard.json             # Grafana metric monitoring dashboard
+│   └── alerts.yml                 # Prometheus alert rules
+├── Dockerfile                     # Frontend/Root Docker container build
+├── docker-compose.yml             # Multi-container local orchestration
+├── prometheus.yml                 # Prometheus configuration
+├── deployment.yaml                # Root Kubernetes deployment manifest
+├── service.yaml                   # Root Kubernetes service manifest
+├── LIVE_URL.txt                   # Live production deployment URL
+├── index.html                     # Job Portal web interface
+├── script.js                      # Interactivity & search filtering logic
+├── style.css                      # Modern dark/light design system
+├── package.json                   # Node package dependencies & test scripts
+└── README.md                      # DevOps project & assignment documentation
 ```
 
 ---
 
-## 🧪 Running Automated Unit Tests
-
-The repository includes automated unit tests written for Node.js (`node --test`) to test logic, state management, and structural integrity.
-
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-
-### Command Execution
-To run the automated test suite locally:
+## 🧪 Running Unit Tests & Local Verification
 
 ```bash
+# Run backend & unit test suite
 npm test
 ```
 
-Expected Output:
-```text
-✔ search filter utility handles keyword matching correctly
-✔ login modal status tracker manages open and closed states
-✔ job card dataset contains required properties
-✔ mobile navigation drawer toggle state function works
-✔ git ignore configuration avoids unwanted build artifacts
-```
-
 ---
 
-## ⚙️ Continuous Integration (CI) Pipelines
+## 🌿 Version Control & Git History
 
-### 1. GitHub Actions Pipeline (`.github/workflows/ci.yml`)
-The GitHub Actions workflow triggers automatically on:
-- Pushes to `main` and feature branches (`feature/*`, `docs/*`).
-- Pull Requests targetting `main`.
+All tasks completed according to assignment specifications for Mid-term 2 (Modules 5, 6, 7).
 
-**Workflow Steps:**
-1. Checkout repository code (`actions/checkout@v4`).
-2. Setup Node.js runtime environment (`actions/setup-node@v4`).
-3. Execute automated test suite (`npm test`).
-
-### 2. Jenkins Pipeline (`Jenkinsfile`)
-A declarative `Jenkinsfile` is included in the project root to support local or remote Jenkins automation servers.
-
-**Jenkins Pipeline Stages:**
-1. **Checkout**: Retrieves source code from Git SCM.
-2. **Environment Setup**: Verifies Node.js and NPM versions.
-3. **Test Suite**: Executes `npm test` automated test suite.
-4. **Build & Verify**: Validates static assets (`index.html`, `style.css`, `script.js`).
-
----
-
-## 🌿 Git Branching & Merging Strategy
-
-The repository strictly follows feature-branch workflow practices:
-- `main`: Production-ready code branch.
-- `feature/unit-tests`: Feature branch for adding unit tests and package configuration.
-- `feature/ci-pipeline`: Feature branch for GitHub Actions integration.
-- `feature/jenkins-pipeline`: Feature branch for Jenkinsfile creation.
-- `docs/devops-setup`: Feature branch for documentation updates.
-
-All feature branches are merged into `main` via documented Pull Requests.
-
-
-## 📊 Quality Assurance & Automated Status Checks
-
-All pull requests and commits are automatically validated through GitHub Actions CI pipeline running unit test suites across Node.js environments.

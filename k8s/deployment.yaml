@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-portal-backend-deployment
+  namespace: default
+  labels:
+    app: job-portal-backend
+    tier: backend
+    module: m7-kubernetes
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: job-portal-backend
+  template:
+    metadata:
+      labels:
+        app: job-portal-backend
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/skit-devops-2026/job-portal-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-portal-frontend-deployment
+  namespace: default
+  labels:
+    app: job-portal-frontend
+    tier: frontend
+    module: m7-kubernetes
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: job-portal-frontend
+  template:
+    metadata:
+      labels:
+        app: job-portal-frontend
+        tier: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/skit-devops-2026/job-portal-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
